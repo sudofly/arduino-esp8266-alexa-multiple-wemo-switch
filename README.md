@@ -1,6 +1,6 @@
-###Arduino Esp8266 Alexa Multiple Belkin wemo switch emulator
+# Arduino Esp8266 Alexa Multiple Belkin wemo switch emulator
 
-###Modified to connect switch relays from the LC Technology 2x 5v/12v relay board found on ebay and alike
+## Modified to connect switch relays from the LC Technology 2x 5v/12v relay board found on ebay and alike
 
 This project supports emulating upto 14 belkin wemo switches using 1 ESP 8266  chip.
 
