@@ -6,32 +6,38 @@
 #include "UpnpBroadcastResponder.h"
 #include "CallbackFunction.h"
 
+//relays
+byte rel1ON[] = {0xA0, 0x01, 0x01, 0xA2};  //Hex command to send to serial for open relay
+byte rel1OFF[] = {0xA0, 0x01, 0x00, 0xA1}; //Hex command to send to serial for close relay
+byte rel2ON[] = {0xA0, 0x02, 0x01, 0xA3};  //Hex command to send to serial for open relay
+byte rel2OFF[] = {0xA0, 0x02, 0x00, 0xA2}; //Hex command to send to serial for close relay
+
 // prototypes
 boolean connectWifi();
 
 //on/off callbacks 
-bool officeLightsOn();
-bool officeLightsOff();
+bool Relay1On();
+bool Relay2Off();
 bool kitchenLightsOn();
 bool kitchenLightsOff();
 
 // Change this before you flash
-const char* ssid = "June";
-const char* password = "wifipassword";
+const char* ssid = "MyWiFiSSID";
+const char* password = "MyWiFiPassword";
 
 boolean wifiConnected = false;
 
 UpnpBroadcastResponder upnpBroadcastResponder;
 
-Switch *office = NULL;
-Switch *kitchen = NULL;
+Switch *relay1 = NULL;
+Switch *relay2 = NULL;
 
-bool isOfficeLightsOn = false;
-bool isKitchenLightstsOn = false;
+bool isRelay1On = false;
+bool isRelay2On = false;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
    
   // Initialise wifi connection
   wifiConnected = connectWifi();
@@ -41,12 +47,12 @@ void setup()
     
     // Define your switches here. Max 10
     // Format: Alexa invocation name, local port no, on callback, off callback
-    office = new Switch("office lights", 80, officeLightsOn, officeLightsOff);
-    kitchen = new Switch("kitchen lights", 81, kitchenLightsOn, kitchenLightsOff);
+    relay1 = new Switch("Kitchen Fan", 80, Relay1On, Relay1Off);
+    relay2 = new Switch("kitchen lights", 81, Relay2On, Relay2Off);
 
     Serial.println("Adding switches upnp broadcast responder");
-    upnpBroadcastResponder.addDevice(*office);
-    upnpBroadcastResponder.addDevice(*kitchen);
+    upnpBroadcastResponder.addDevice(*relay1);
+    upnpBroadcastResponder.addDevice(*relay2);
   }
 }
  
@@ -55,37 +61,37 @@ void loop()
 	 if(wifiConnected){
       upnpBroadcastResponder.serverLoop();
       
-      kitchen->serverLoop();
-      office->serverLoop();
+      relay1->serverLoop();
+      relay2->serverLoop();
 	 }
 }
 
-bool officeLightsOn() {
+bool Relay1On() {
     Serial.println("Switch 1 turn on ...");
-    
-    isOfficeLightsOn = true;    
-    return isOfficeLightsOn;
+    Serial.write(rel1ON, sizeof(rel1ON));     // turns the relay ON
+    isRelay1On = true;    
+    return isRelay1On;
 }
 
-bool officeLightsOff() {
+bool Relay1Off() {
     Serial.println("Switch 1 turn off ...");
-
-    isOfficeLightsOn = false;
-    return isOfficeLightsOn;
+    Serial.write(rel1OFF, sizeof(rel1OFF));   // turns the relay OFF
+    isRelay1On = false;
+    return isRelay1On;
 }
 
-bool kitchenLightsOn() {
+bool Relay2On() {
     Serial.println("Switch 2 turn on ...");
-
-    isKitchenLightstsOn = true;
-    return isKitchenLightstsOn;
+    Serial.write(rel2ON, sizeof(rel2ON));
+    isRelay2On = true;
+    return isRelay2On;
 }
 
-bool kitchenLightsOff() {
+bool Relay2Off() {
   Serial.println("Switch 2 turn off ...");
-
-  isKitchenLightstsOn = false;
-  return isKitchenLightstsOn;
+  Serial.write(rel2OFF, sizeof(rel2OFF));
+  isRelay2On = false;
+  return isRelay2On;
 }
 
 // connect to wifi – returns true if successful or false if not
