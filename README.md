@@ -7,6 +7,7 @@ This project supports emulating upto 14 belkin wemo switches using 1 ESP 8266  c
 Parts you need:
 
 http://www.chinalctech.com/index.php?_m=mod_product&_a=view&p_id=1262
+
 http://www.chinalctech.com/index.php?_m=mod_product&_a=view&p_id=1261
 
 Presumably it will work with the 4 channel versions too...
