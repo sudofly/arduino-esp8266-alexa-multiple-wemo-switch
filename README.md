@@ -16,8 +16,8 @@ How to use:
 
 1. Download the code
 2. Open wemos.ino in the Arduino editor.
-2. Change the WI-FI settings. 
-3. Define switches and callbacks
+2. Change the WI-FI settings.  (Line 25,26)
+3. Define switches and callbacks (Line 50,51)
 3. Flash 
 4. Enjoy
 
